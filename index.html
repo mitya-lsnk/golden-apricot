@@ -49,7 +49,7 @@ button,input,select,textarea{font:inherit;color:inherit}
 .logo b{display:block;font-family:var(--serif);font-size:22px;font-weight:700;line-height:1;letter-spacing:.01em}
 .logo small{display:block;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-top:3px}
 .nav{display:flex;gap:26px;margin-left:auto}
-.nav a{text-decoration:none;font-size:15px;font-weight:500;color:var(--muted);position:relative;padding:6px 0;transition:color .2s}
+.nav a{white-space:nowrap;text-decoration:none;font-size:15px;font-weight:500;color:var(--muted);position:relative;padding:6px 0;transition:color .2s}
 .nav a::after{content:"";position:absolute;left:0;right:0;bottom:0;height:2px;background:var(--apricot);transform:scaleX(0);transition:transform .25s}
 .nav a:hover{color:var(--ink)}
 .nav a:hover::after{transform:scaleX(1)}
@@ -261,6 +261,17 @@ h2{font-family:var(--serif);font-weight:700;font-size:clamp(38px,4.6vw,58px);lin
 .lb-prev{left:20px;top:50%;transform:translateY(-50%)}
 .lb-next{right:20px;top:50%;transform:translateY(-50%)}
 
+/* в армянской версии слова длиннее — часть пунктов меню убираем */
+html[lang=hy] .nav .hy-hide{display:none}
+
+/* меню не влезает в строку — прячем его в кнопку ☰ */
+.nav-compact .nav{position:fixed;inset:72px 0 auto 0;background:var(--cream);flex-direction:column;gap:0;padding:8px 16px 20px;border-bottom:1px solid var(--line);transform:translateY(-120%);transition:transform .35s ease;box-shadow:0 20px 30px -20px rgba(0,0,0,.3)}
+.nav-compact.menu-open .nav{transform:none}
+.nav-compact .nav a{font-size:18px;padding:14px 4px;border-bottom:1px solid var(--line)}
+.nav-compact .nav a::after{display:none}
+.nav-compact .burger{display:flex;margin-left:0}
+.nav-compact .header .langs{margin-left:auto}
+
 /* reveal */
 .reveal{opacity:0;transform:translateY(26px);transition:opacity .6s ease,transform .6s ease}
 .reveal.in{opacity:1;transform:none}
@@ -373,10 +384,10 @@ h2{font-family:var(--serif);font-weight:700;font-size:clamp(38px,4.6vw,58px);lin
     <nav class="nav" id="nav">
       <a href="#about" data-i18n="nav.about">О нас</a>
       <a href="#rooms" data-i18n="nav.rooms">Номера</a>
-      <a href="#gallery" data-i18n="nav.gallery">Фото</a>
+      <a href="#gallery" class="hy-hide" data-i18n="nav.gallery">Фото</a>
       <a href="#amenities" data-i18n="nav.amen">Удобства</a>
       <a href="#restaurant" data-i18n="nav.resto">Ресторан</a>
-      <a href="#gyumri" data-i18n="nav.city">Гюмри</a>
+      <a href="#gyumri" class="hy-hide" data-i18n="nav.city">Гюмри</a>
       <a href="#contact" data-i18n="nav.contact">Контакты</a>
     </nav>
     <div class="langs" role="group" aria-label="Language">
@@ -628,7 +639,7 @@ h2{font-family:var(--serif);font-weight:700;font-size:clamp(38px,4.6vw,58px);lin
         </ul>
         <div class="map">
           <iframe loading="lazy" title="Map" referrerpolicy="no-referrer-when-downgrade"
-            src="https://maps.google.com/maps?q=Golden%20Apricot%20hotel%2C%2084%2F1%20Gorki%20Street%2C%20Gyumri&z=16&output=embed"></iframe>
+            id="map" src="https://maps.google.com/maps?q=40.7871635,43.8475584&z=16&hl=ru&output=embed"></iframe>
         </div>
       </div>
     </div>
@@ -646,7 +657,7 @@ h2{font-family:var(--serif);font-weight:700;font-size:clamp(38px,4.6vw,58px);lin
     <div data-i18n="foot">© 2026 Отель «Золотой абрикос», Гюмри. С любовью к Гюмри.</div>
     <a href="#top" data-i18n="up">Наверх ↑</a>
   </div>
-  <div class="credits">Фото блюд и Гюмри — Wikimedia Commons: Armineaghayan, AnnHairapetian, Textfabrikant, Armenak Margarian (CC BY-SA 4.0), Rs4815 (CC BY-SA 3.0), Sharon Hahn Darlin (CC BY 4.0), Combrian (CC0)</div>
+  <div class="credits"><span data-i18n="credits">Фото блюд и Гюмри — Wikimedia Commons:</span> Armineaghayan, AnnHairapetian, Textfabrikant, Armenak Margarian (CC BY-SA 4.0), Rs4815 (CC BY-SA 3.0), Sharon Hahn Darlin (CC BY 4.0), Combrian (CC0)</div>
   <div class="abc" aria-hidden="true">Ա Բ Գ Դ Ե Զ Է Ը Թ Ժ Ի Լ Խ Ծ Կ Հ Ձ Ղ Ճ Մ Յ Ն Շ Ո Չ Պ Ջ Ռ Ս Վ Տ Ր Ց Ւ Փ Ք Օ Ֆ</div>
 </footer>
 
@@ -763,6 +774,7 @@ ru:{
   'b.name':'Ваше имя','b.room':'Номер','b.any':'Любой подходящий','b.wish':'Пожелания','b.wishPh':'Трансфер из аэропорта, поздний заезд, ужин…',
   'b.send':'Отправить в WhatsApp','b.call':'Позвонить','b.hint':'Предоплата не нужна — мы просто свяжемся с вами и подтвердим бронь.',
   'c.addr':'Адрес','c.addrV':'Армения, Гюмри, ул. Максима Горького, 84/1','c.phone':'Телефон','c.recep':'Ресепшен','c.recepV':'Ежедневно, заезд с 14:00',
+  credits:'Фото блюд и Гюмри — Wikimedia Commons:',
   foot:'© 2026 Отель «Золотой абрикос», Гюмри. С любовью к Гюмри.', up:'Наверх ↑',
   msg:'Здравствуйте! Хочу забронировать номер в отеле «Золотой абрикос».', mName:'Имя', mIn:'Заезд', mOut:'Выезд', mGuests:'Гостей', mRoom:'Номер', mWish:'Пожелания'
 },
@@ -826,6 +838,7 @@ en:{
   'b.name':'Your name','b.room':'Room','b.any':'Any suitable','b.wish':'Requests','b.wishPh':'Airport transfer, late arrival, dinner…',
   'b.send':'Send via WhatsApp','b.call':'Call us','b.hint':'No prepayment needed — we’ll get in touch and confirm your booking.',
   'c.addr':'Address','c.addrV':'84/1 Maxim Gorki Street, Gyumri, Armenia','c.phone':'Phone','c.recep':'Front desk','c.recepV':'Daily, check-in from 14:00',
+  credits:'Food and Gyumri photos — Wikimedia Commons:',
   foot:'© 2026 Golden Apricot Hotel, Gyumri. Made with love for Gyumri.', up:'Back to top ↑',
   msg:'Hello! I would like to book a room at Golden Apricot hotel.', mName:'Name', mIn:'Check-in', mOut:'Check-out', mGuests:'Guests', mRoom:'Room', mWish:'Requests'
 },
@@ -889,6 +902,7 @@ hy:{
   'b.name':'Ձեր անունը','b.room':'Համար','b.any':'Ցանկացած հարմար','b.wish':'Ցանկություններ','b.wishPh':'Տրանսֆեր օդանավակայանից, ուշ ժամանում, ընթրիք…',
   'b.send':'Ուղարկել WhatsApp-ով','b.call':'Զանգահարել','b.hint':'Կանխավճար պետք չէ՝ մենք կկապվենք ձեզ հետ և կհաստատենք ամրագրումը։',
   'c.addr':'Հասցե','c.addrV':'Հայաստան, Գյումրի, Մաքսիմ Գորկու փ. 84/1','c.phone':'Հեռախոս','c.recep':'Ընդունարան','c.recepV':'Ամեն օր, ժամանում՝ 14:00-ից',
+  credits:'Ուտեստների և Գյումրու լուսանկարները՝ Wikimedia Commons.',
   foot:'© 2026 «Ոսկե Ծիրան» հյուրանոց, Գյումրի։ Սիրով՝ Գյումրուն։', up:'Վերև ↑',
   msg:'Բարև ձեզ։ Ուզում եմ համար ամրագրել «Ոսկե Ծիրան» հյուրանոցում։', mName:'Անուն', mIn:'Ժամանում', mOut:'Մեկնում', mGuests:'Հյուրեր', mRoom:'Համար', mWish:'Ցանկություններ'
 }};
@@ -944,7 +958,23 @@ function applyLang(){
   document.querySelectorAll('[data-i18n-ph]').forEach(el => el.placeholder = t(el.dataset.i18nPh));
   document.querySelectorAll('.langs button').forEach(b => b.classList.toggle('on', b.dataset.lang === lang));
   render();
+  fitNav();
+  const map = $('#map'), src = map.src.replace(/hl=\w+/, 'hl=' + lang);
+  if (map.src !== src) map.src = src;
 }
+
+/* если пункты меню не помещаются в шапку — показываем кнопку ☰ */
+function fitNav(){
+  const nav = $('#nav'), row = $('.header .wrap');
+  nav.style.transition = 'none';            // без анимации, чтобы меню не «выезжало» при проверке
+  document.body.classList.remove('nav-compact');
+  if (innerWidth > 920 && (nav.scrollWidth > nav.clientWidth + 1 || row.scrollWidth > row.clientWidth + 1))
+    document.body.classList.add('nav-compact');
+  nav.offsetHeight;
+  nav.style.transition = '';
+}
+addEventListener('resize', fitNav);
+if (document.fonts) document.fonts.ready.then(fitNav);
 document.querySelectorAll('.langs button').forEach(b => b.addEventListener('click', () => {
   lang = b.dataset.lang;
   try { localStorage.setItem('ga-lang', lang); } catch(e){}
