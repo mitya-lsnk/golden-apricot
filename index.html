@@ -193,7 +193,9 @@ h2{font-family:var(--serif);font-weight:700;font-size:clamp(38px,4.6vw,58px);lin
 .places{display:grid;grid-template-columns:repeat(4,1fr);gap:22px}
 .place{position:relative;border-radius:var(--radius);overflow:hidden;background:#fff;border:1px solid var(--line)}
 .place-art{aspect-ratio:1/1;background:var(--stone)}
-.place-art svg{width:100%;height:100%}
+.place-art{overflow:hidden}
+.place-art img{width:100%;height:100%;object-fit:cover;transition:transform .6s ease}
+.place:hover .place-art img{transform:scale(1.05)}
 .place-body{padding:20px 22px 24px}
 .place .dist{font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--apricot)}
 .place h3{font-family:var(--serif);font-size:24px;line-height:1.15;margin:4px 0 8px}
@@ -644,7 +646,7 @@ h2{font-family:var(--serif);font-weight:700;font-size:clamp(38px,4.6vw,58px);lin
     <div data-i18n="foot">© 2026 Отель «Золотой абрикос», Гюмри. С любовью к Гюмри.</div>
     <a href="#top" data-i18n="up">Наверх ↑</a>
   </div>
-  <div class="credits">Фото блюд: Armineaghayan (CC BY-SA 4.0), Rs4815 (CC BY-SA 3.0), Combrian (CC0) — Wikimedia Commons</div>
+  <div class="credits">Фото блюд и Гюмри — Wikimedia Commons: Armineaghayan, AnnHairapetian, Textfabrikant, Armenak Margarian (CC BY-SA 4.0), Rs4815 (CC BY-SA 3.0), Sharon Hahn Darlin (CC BY 4.0), Combrian (CC0)</div>
   <div class="abc" aria-hidden="true">Ա Բ Գ Դ Ե Զ Է Ը Թ Ժ Ի Լ Խ Ծ Կ Հ Ձ Ղ Ճ Մ Յ Ն Շ Ո Չ Պ Ջ Ռ Ս Վ Տ Ր Ց Ւ Փ Ք Օ Ֆ</div>
 </footer>
 
@@ -693,13 +695,6 @@ const DISHES = [
   {hy:'Լավաշ', id:'lavash'},
   {hy:'Գաթա', id:'gata'}
 ];
-/* картинки для мест города — простые силуэты */
-const PLACE_ART = {
-  square:`<rect width="300" height="300" fill="#EADBC6"/><circle cx="220" cy="80" r="34" fill="#F4B860" opacity=".7"/><g fill="#A65A47"><rect x="90" y="140" width="120" height="120"/><rect x="125" y="100" width="50" height="42"/><path d="M118 104l32-44 32 44z" fill="#8F2433"/><path d="M150 50v14M144 55h12" stroke="#8F2433" stroke-width="3"/></g><g fill="#2A2220"><path d="M137 260v-40a13 13 0 0 1 26 0v40z"/><path d="M105 200v-24a7 7 0 0 1 14 0v24zM181 200v-24a7 7 0 0 1 14 0v24z"/></g><rect y="258" width="300" height="42" fill="#C9A983"/>`,
-  kumayri:`<rect width="300" height="300" fill="#F3E2CC"/><g><rect x="20" y="110" width="130" height="160" fill="#2A2220"/><rect x="150" y="90" width="130" height="180" fill="#A65A47"/></g><g fill="#F4B860"><path d="M38 170v-30a11 11 0 0 1 22 0v30zM74 170v-30a11 11 0 0 1 22 0v30zM110 170v-30a11 11 0 0 1 22 0v30zM38 240v-30a11 11 0 0 1 22 0v30zM110 240v-30a11 11 0 0 1 22 0v30z" opacity=".9"/></g><g fill="#3A2C27"><path d="M170 160v-34a12 12 0 0 1 24 0v34zM206 160v-34a12 12 0 0 1 24 0v34zM242 160v-34a12 12 0 0 1 24 0v34zM170 240v-34a12 12 0 0 1 24 0v34zM242 240v-34a12 12 0 0 1 24 0v34z"/></g><path d="M206 270v-50a12 12 0 0 1 24 0v50z" fill="#F4B860"/><rect x="14" y="102" width="142" height="10" fill="#5B403A"/><rect x="144" y="82" width="142" height="10" fill="#7E3F33"/><rect y="268" width="300" height="32" fill="#8C7B70"/>`,
-  fortress:`<rect width="300" height="300" fill="#F7D8AE"/><path d="M0 230 80 180 160 200 240 170 300 190V300H0z" fill="#B88E68"/><g fill="#2A2220"><ellipse cx="150" cy="190" rx="96" ry="18"/><rect x="54" y="120" width="192" height="70"/><ellipse cx="150" cy="120" rx="96" ry="18" fill="#3A2C27"/></g><g fill="#3A2C27"><rect x="60" y="104" width="14" height="16"/><rect x="88" y="98" width="14" height="16"/><rect x="118" y="95" width="14" height="16"/><rect x="148" y="94" width="14" height="16"/><rect x="178" y="95" width="14" height="16"/><rect x="208" y="98" width="14" height="16"/><rect x="230" y="104" width="14" height="16"/></g><path d="M138 190v-26a12 12 0 0 1 24 0v26z" fill="#F4B860"/><circle cx="60" cy="60" r="26" fill="#FFE1A0"/>`,
-  museum:`<rect width="300" height="300" fill="#EADBC6"/><rect x="40" y="110" width="220" height="150" fill="#C98B76"/><path d="M30 112h240l-20-30H50z" fill="#8F2433"/><g fill="#2A2220"><path d="M62 200v-50a14 14 0 0 1 28 0v50zM136 200v-50a14 14 0 0 1 28 0v50zM210 200v-50a14 14 0 0 1 28 0v50z"/></g><rect x="40" y="206" width="220" height="10" fill="#8F2433"/><g fill="#F4B860"><path d="M50 211l6-4 6 4-6 4zM80 211l6-4 6 4-6 4zM110 211l6-4 6 4-6 4zM140 211l6-4 6 4-6 4zM170 211l6-4 6 4-6 4zM200 211l6-4 6 4-6 4zM230 211l6-4 6 4-6 4z"/></g><path d="M134 260v-34h32v34z" fill="#3A2C27"/><rect y="258" width="300" height="42" fill="#B88E68"/>`
-};
 const PLACES = ['square','kumayri','fortress','museum'];
 /* фото для галереи — файлы лежат в папке photos */
 const GALLERY = ['hall','balcony','door','lounge','bay','brandy','stairs','night-side','bath'];
@@ -929,7 +924,7 @@ function render(){
 
   $('#places').innerHTML = PLACES.map(p => `
     <article class="place reveal in">
-      <div class="place-art"><svg viewBox="0 0 300 300" preserveAspectRatio="xMidYMid slice">${PLACE_ART[p]}</svg></div>
+      <div class="place-art"><img src="photos/city-${p}.jpg" alt="${t('p.'+p)}" loading="lazy"></div>
       <div class="place-body"><div class="dist">${t('p.'+p+'.k')}</div><h3>${t('p.'+p)}</h3><p>${t('p.'+p+'.d')}</p></div>
     </article>`).join('');
 
